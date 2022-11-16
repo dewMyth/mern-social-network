@@ -1,8 +1,6 @@
-import React, { useState } from "react";
+import React from "react";
 import Online from "../Online/Onlne";
 import "./RightBar.css";
-
-import { Link } from "react-router-dom";
 
 const RightBar = ({ user }) => {
   const public_folder = process.env.REACT_APP_PUBLIC_FOLDER;

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext } from "react";
 
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
@@ -12,9 +12,6 @@ import Register from "./Components/Pages/Register/Register";
 function App() {
   const { user } = useContext(AuthContext) || localStorage.getItem("user");
 
-  useEffect(() => {
-    console.log("App.js: user = ", user);
-  }, []);
   return (
     <>
       <AuthContextProvider>

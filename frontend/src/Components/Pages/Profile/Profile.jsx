@@ -24,7 +24,7 @@ const Profile = () => {
       setUser(res.data);
     };
     fetchUser();
-  }, []);
+  });
 
   return (
     <>

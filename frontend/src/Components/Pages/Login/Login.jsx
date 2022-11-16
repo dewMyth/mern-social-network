@@ -1,4 +1,4 @@
-import React, { useState, useRef, useContext } from "react";
+import React, { useRef, useContext } from "react";
 import "./Login.css";
 import baseUrl from "../../../baseURL";
 import { AuthContext } from "../../../context/AuthContext";
@@ -9,8 +9,6 @@ import Alert from "@mui/material/Alert";
 
 import axios from "axios";
 
-import { useNavigate } from "react-router";
-
 const Login = () => {
   // const [email, setEmail] = useState("");
   // const [password, setPassword] = useState("");
@@ -20,8 +18,6 @@ const Login = () => {
   const passwordRef = useRef();
 
   const { isFetching, error, dispatch } = useContext(AuthContext);
-
-  const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
