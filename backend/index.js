@@ -4,9 +4,12 @@ const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const helmet = require("helmet");
 const morgan = require("morgan");
+const cors = require("cors");
 
 //Variable Declaration
 const app = express();
+
+app.use(cors());
 
 //Import ROUTES
 const userRoute = require("./routes/users");
