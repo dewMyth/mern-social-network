@@ -8,14 +8,19 @@ import LeftBar from "../../Blocks/LeftBar/LeftBar";
 import RightBar from "../../Blocks/RightBar/RightBar";
 import axios from "axios";
 
+import { useParams } from "react-router";
+
 const Profile = () => {
   const public_folder = process.env.REACT_APP_PUBLIC_FOLDER;
 
   const [user, setUser] = useState({});
 
+  const params = useParams();
+  // const username = username;
+
   useEffect(() => {
     const fetchUser = async () => {
-      const res = await axios.get("/user/?username=johnp");
+      const res = await axios.get("/user/?username=" + params.username);
       setUser(res.data);
     };
     fetchUser();
@@ -46,7 +51,7 @@ const Profile = () => {
             </div>
           </div>
           <div className="profileRightBottom">
-            <Feed username="johnp" />
+            <Feed username={params.username} />
             <RightBar user={user} />
           </div>
         </div>
