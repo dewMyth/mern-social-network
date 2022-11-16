@@ -15,7 +15,7 @@ const Profile = () => {
 
   useEffect(() => {
     const fetchUser = async () => {
-      const res = await axios.get("/user/?username=dewMyth");
+      const res = await axios.get("/user/?username=johnp");
       setUser(res.data);
     };
     fetchUser();
@@ -31,7 +31,7 @@ const Profile = () => {
             <div className="profileCover">
               <img
                 className="profileCoverImg"
-                src={user.coverPicture || public_folder + "default-cover.png"}
+                src={user?.coverPicture || public_folder + "default-cover.png"}
                 alt=""
               />
               <img
@@ -46,7 +46,7 @@ const Profile = () => {
             </div>
           </div>
           <div className="profileRightBottom">
-            <Feed username="dewMyth" />
+            <Feed username="johnp" />
             <RightBar user={user} />
           </div>
         </div>
