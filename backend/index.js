@@ -5,6 +5,8 @@ const dotenv = require("dotenv");
 const helmet = require("helmet");
 const morgan = require("morgan");
 const cors = require("cors");
+const path = require("path");
+const multer = require("multer");
 
 //Variable Declaration
 const app = express();
@@ -34,6 +36,25 @@ mongoose.connect(
 app.use(express.json());
 app.use(helmet());
 app.use(morgan("common"));
+
+//Post Image Upload Route
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "public/images");
+  },
+  filename: (req, file, cb) => {
+    cb(null, file.originalname);
+  },
+});
+
+const upload = multer({ storage: storage });
+app.post("/api/upload", upload.single("postImg"), (req, res) => {
+  try {
+    return res.status(200).json("File Uploaded Successfully!");
+  } catch (err) {
+    console.error(err);
+  }
+});
 
 //ROUTES ENDPOINTS
 app.use("/api/user", userRoute);
