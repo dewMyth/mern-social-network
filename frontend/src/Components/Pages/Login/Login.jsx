@@ -33,6 +33,7 @@ const Login = () => {
         window.location.reload();
       })
       .catch((err) => {
+        console.log(err);
         dispatch({ type: "LOGIN_ERROR", payload: "Wrong Credentials!" });
       });
   };
