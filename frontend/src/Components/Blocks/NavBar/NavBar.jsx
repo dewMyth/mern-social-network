@@ -1,10 +1,15 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Person, Search, Chat, Notifications } from "@material-ui/icons";
 import "./NavBar.css";
+import { AuthContext } from "../../../context/AuthContext";
 
 import { Link } from "react-router-dom";
 
 const NavBar = () => {
+  const { user } = useContext(AuthContext);
+
+  const PF = process.env.REACT_APP_PUBLIC_FOLDER;
+
   return (
     <>
       <div className="topbarContainer">
@@ -44,9 +49,11 @@ const NavBar = () => {
               <span className="topbarIconBadge">1</span>
             </div>
           </div>
-          <Link to="/profile/:username">
+          <Link to={`/profile/${user.username}`}>
             <img
-              src="/assets/person/1.jpg"
+              src={
+                user.profilePicture ? user.profilePicture : PF + "avatar.svg"
+              }
               alt=""
               className="topbarProfilePicture"
             />
