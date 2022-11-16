@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import "./Post.css";
 
 import { Link } from "react-router-dom";
@@ -9,7 +9,13 @@ import axios from "axios";
 
 import { format } from "timeago.js";
 
+import baseUrl from "../../../baseURL";
+
+import { AuthContext } from "../../../context/AuthContext";
+
 const Post = ({ post }) => {
+  const { user } = useContext(AuthContext);
+
   const public_folder = process.env.REACT_APP_PUBLIC_FOLDER;
 
   const [like, setLike] = useState(post.likes.length);
@@ -27,6 +33,15 @@ const Post = ({ post }) => {
   const onLikeClick = () => {
     setLike(isLiked ? like - 1 : like + 1);
     setIsLiked(!isLiked);
+    try {
+      axios
+        .put(baseUrl + "post/" + post._id + "/like", { userId: user._id })
+        .then((res) => {
+          console.log(res.data);
+        });
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (
