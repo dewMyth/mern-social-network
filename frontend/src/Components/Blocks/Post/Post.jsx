@@ -53,7 +53,11 @@ const Post = ({ post }) => {
               <Link to={`/profile/${poster.username}`}>
                 <img
                   className="postProfileImg"
-                  src={poster.profilePicture || public_folder + "avatar.svg"}
+                  src={
+                    user.profilePicture
+                      ? public_folder + user.profilePicture
+                      : public_folder + "avatar.svg"
+                  }
                   width="100px"
                   alt=""
                 />
@@ -67,7 +71,7 @@ const Post = ({ post }) => {
           </div>
           <div className="postCenter">
             <span className="postText">{post.desc}</span>
-            <img className="postImg" src={post.img} alt="" />
+            <img className="postImg" src={public_folder + post.img} alt="" />
           </div>
           <div className="postBottom">
             <div className="postBottomLeft">

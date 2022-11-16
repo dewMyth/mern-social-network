@@ -52,7 +52,9 @@ const NavBar = () => {
           <Link to={`/profile/${user.username}`}>
             <img
               src={
-                user.profilePicture ? user.profilePicture : PF + "avatar.svg"
+                user.profilePicture
+                  ? PF + user.profilePicture
+                  : PF + "avatar.svg"
               }
               alt=""
               className="topbarProfilePicture"
