@@ -8,6 +8,8 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 
+import { Cancel } from "@material-ui/icons";
+
 import { AuthContext } from "../../../context/AuthContext";
 
 import baseUrl from "../../../baseURL";
@@ -109,6 +111,19 @@ const Share = () => {
             />
           </div>
           <hr className="shareHr" />
+          {postImg && (
+            <div className="shareImgContainer">
+              <img
+                className="shareImg"
+                src={URL.createObjectURL(postImg)}
+                style={{ width: "50%", height: "50%" }}
+              />
+              <Cancel
+                className="shareCancelImg"
+                onClick={() => setpostImg(null)}
+              />
+            </div>
+          )}
           <form className="shareBottom" onSubmit={handlePostSubmit}>
             <div className="shareOptions">
               <label htmlFor="postImg" className="shareOption">
