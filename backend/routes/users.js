@@ -104,4 +104,30 @@ router.put("/:id/unfollow", async (req, res) => {
   }
 });
 
+// Get followings -> get all users that the current user is following
+router.get("/followings/:userId", async (req, res) => {
+  try {
+    const user = await User.findById(req.params.userId);
+
+    const followings = await Promise.all(
+      user.following.map((followingId) => {
+        console.log(followingId);
+        return User.findById(followingId);
+      })
+    );
+
+    console.log(followings);
+
+    let followingsList = [];
+    followings.map((following) => {
+      const { _id, username, profilePicture } = following;
+      followingsList.push({ _id, username, profilePicture });
+    });
+
+    res.status(200).json(followingsList);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
 module.exports = router;
