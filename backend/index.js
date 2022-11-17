@@ -66,7 +66,12 @@ const storage = FirebaseStorage({
 const upload = multer({ storage: storage });
 app.post("/api/upload", upload.single("postImg"), (req, res) => {
   try {
-    return res.status(200).json("File Uploaded Successfully!");
+    const imgPath = JSON.stringify(req.file.path);
+    console.log(imgPath);
+    return res.status(200).json({
+      imgPath,
+      message: "Image Uploaded Successfully",
+    });
   } catch (err) {
     console.error(err);
   }
