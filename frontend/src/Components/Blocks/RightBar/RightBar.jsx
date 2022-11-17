@@ -1,11 +1,28 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import Online from "../Online/Onlne";
 import "./RightBar.css";
+
+import axios from "axios";
+import baseUrl from "../../../baseURL";
 
 const RightBar = ({ user }) => {
   const public_folder = process.env.REACT_APP_PUBLIC_FOLDER;
 
-  // const [friends, setFriends] = useState(user.followings);
+  const [friends, setFriends] = useState(user.followings);
+
+  useEffect(() => {
+    const getFollowings = async () => {
+      try {
+        await axios.get(baseUrl + "user/followings/" + user._id).then((res) => {
+          setFriends(res.data);
+        });
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    getFollowings();
+  }, [user._id]);
 
   const HomeRightbar = () => {
     return (
@@ -60,27 +77,28 @@ const RightBar = ({ user }) => {
           </div>
         </div>
         <h4 className="rightbarTitle">{user.username}'s friends</h4>
+
         <div className="rightbarFollowings">
-          <div className="rightbarFollowing">
+          {/* <div className="rightbarFollowing">
             <img
               src="/assets/person/2.png"
               alt=""
               className="rightbarFollowingImg"
             />
             <span className="rightbarFollowingName">Dewmith Akalanka</span>
-          </div>
+          </div> */}
 
-          {/* {friends.map((friend) => (
+          {friends?.map((friend) => (
             <Link
               to={"/profile/" + friend.username}
-              style={{ textDecoration: "none" }}
+              style={{ textDecoration: "none", color: "inherit" }}
             >
               <div className="rightbarFollowing">
                 <img
                   src={
                     friend.profilePicture
                       ? public_folder + friend.profilePicture
-                      : public_folder + "person/noAvatar.png"
+                      : public_folder + "avatar.svg"
                   }
                   alt=""
                   className="rightbarFollowingImg"
@@ -88,7 +106,7 @@ const RightBar = ({ user }) => {
                 <span className="rightbarFollowingName">{friend.username}</span>
               </div>
             </Link>
-          ))} */}
+          ))}
         </div>
       </>
     );
