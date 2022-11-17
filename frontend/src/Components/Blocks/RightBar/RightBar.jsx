@@ -16,14 +16,14 @@ const RightBar = ({ user }) => {
   const [friends, setFriends] = useState([]);
 
   const [followed, setFollowed] = useState(
-    currentUser.following?.includes(user?.id)
+    currentUser.following?.includes(user?._id)
   );
 
   useEffect(() => {
     const getFriends = async () => {
       try {
         const friendList = await axios.get(
-          baseUrl + "user/followings/" + user._id
+          baseUrl + "user/followings/" + user?._id
         );
         setFriends(friendList.data);
       } catch (err) {
@@ -31,6 +31,13 @@ const RightBar = ({ user }) => {
       }
     };
     getFriends();
+
+    // Get followed or not status
+    if (currentUser.following?.includes(user?._id)) {
+      setFollowed(true);
+    } else {
+      setFollowed(false);
+    }
   }, [user]);
 
   const handleAddOrRemove = async (e) => {
