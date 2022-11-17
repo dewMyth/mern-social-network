@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
 import Online from "../Online/Onlne";
 import "./RightBar.css";
@@ -6,23 +6,69 @@ import "./RightBar.css";
 import axios from "axios";
 import baseUrl from "../../../baseURL";
 
+import { AuthContext } from "../../../context/AuthContext";
+
 const RightBar = ({ user }) => {
+  const { user: currentUser, dispatch } = useContext(AuthContext);
+
   const public_folder = process.env.REACT_APP_PUBLIC_FOLDER;
 
-  const [friends, setFriends] = useState(user.followings);
+  const [friends, setFriends] = useState([]);
+
+  const [followed, setFollowed] = useState(
+    currentUser.following?.includes(user?.id)
+  );
 
   useEffect(() => {
-    const getFollowings = async () => {
+    const getFriends = async () => {
       try {
-        await axios.get(baseUrl + "user/followings/" + user._id).then((res) => {
-          setFriends(res.data);
-        });
+        const friendList = await axios.get(
+          baseUrl + "user/followings/" + user._id
+        );
+        setFriends(friendList.data);
       } catch (err) {
         console.log(err);
       }
     };
-    getFollowings();
-  }, [user._id]);
+    getFriends();
+  }, [user]);
+
+  const handleAddOrRemove = async (e) => {
+    e.preventDefault();
+    try {
+      if (followed) {
+        console.log("unfollowing...");
+        await axios
+          .put(baseUrl + "user/" + user._id + "/unfollow", {
+            userId: currentUser._id,
+          })
+          .then((res) => {
+            console.log(res.data);
+            dispatch({
+              type: "UNFOLLOW",
+              payload: user._id,
+            });
+          });
+        setFollowed(false);
+      } else {
+        console.log("following...");
+        await axios
+          .put(baseUrl + "user/" + user._id + "/follow", {
+            userId: currentUser._id,
+          })
+          .then((res) => {
+            console.log(res.data);
+            dispatch({
+              type: "FOLLOW",
+              payload: user._id,
+            });
+          });
+        setFollowed(true);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   const HomeRightbar = () => {
     return (
@@ -49,12 +95,11 @@ const RightBar = ({ user }) => {
   const ProfileRightbar = () => {
     return (
       <>
-        {/* {user.username !== currentUser.username && (
-          <button className="rightbarFollowButton" onClick={handleClick}>
+        {user.username !== currentUser.username ? (
+          <button className="rightbarFollowButton" onClick={handleAddOrRemove}>
             {followed ? "Unfollow" : "Follow"}
-            {followed ? <Remove /> : <Add />}
           </button>
-        )} */}
+        ) : null}
         <h4 className="rightbarTitle">User information</h4>
         <div className="rightbarInfo">
           <div className="rightbarInfoItem">

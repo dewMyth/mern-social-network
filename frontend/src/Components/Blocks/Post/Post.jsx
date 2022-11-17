@@ -43,7 +43,6 @@ const Post = ({ post }) => {
       getDownloadURL(ref(storage, imagePath)).then((url) => {
         setImgPathfromFS(url);
       });
-      console.log(imgPathfromFS);
     } else {
       setImgPathfromFS("");
     }

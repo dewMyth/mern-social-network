@@ -11,3 +11,13 @@ export const loginError = (error) => ({
   type: "LOGIN_ERROR",
   payload: error,
 });
+
+export const FOLLOW = (userId) => ({
+  type: "FOLLOW",
+  payload: userId,
+});
+
+export const UNFOLLOW = (userId) => ({
+  type: "UNFOLLOW",
+  payload: userId,
+});
