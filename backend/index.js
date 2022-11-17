@@ -7,6 +7,7 @@ const morgan = require("morgan");
 const cors = require("cors");
 const path = require("path");
 const multer = require("multer");
+const FirebaseStorage = require("multer-firebase-storage");
 
 //Variable Declaration
 const app = express();
@@ -41,14 +42,25 @@ app.use(helmet());
 app.use(morgan("common"));
 
 //Post Image Upload Route
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "public/images");
+// const storage = multer.diskStorage({
+//   destination: (req, file, cb) => {
+//     cb(null, "public/images");
+//   },
+//   filename: (req, file, cb) => {
+//     // cb(null, file.originalname);
+//     cb(null, req.body.name); //name is the name of the file
+//   },
+// });
+
+// Multer Firebase Storage
+const storage = FirebaseStorage({
+  bucketName: process.env.FIREBASE_BUCKET_NAME,
+  credentials: {
+    clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+    privateKey: process.env.FIREBASE_PRIVATE_KEY,
+    projectId: process.env.FIREBASE_PROJECT_ID,
   },
-  filename: (req, file, cb) => {
-    // cb(null, file.originalname);
-    cb(null, req.body.name); //name is the name of the file
-  },
+  unique: true,
 });
 
 const upload = multer({ storage: storage });
