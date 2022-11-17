@@ -47,17 +47,17 @@ const Share = () => {
     };
     if (postImg) {
       const data = new FormData();
-      const fileName = Date.now() + postImg.name;
-      data.append("name", fileName);
       data.append("postImg", postImg);
-      newPost.img = fileName;
       try {
-        await axios.post(baseUrl + "upload", data);
+        await axios.post(baseUrl + "upload", data).then((res) => {
+          newPost.img = res.data.imgPath;
+        });
       } catch (err) {
         console.log(err);
       }
     }
     try {
+      console.log(newPost);
       await axios.post(baseUrl + "post/create", newPost);
       handleOpen();
       setTimeout(() => {
