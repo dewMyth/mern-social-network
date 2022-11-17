@@ -13,7 +13,12 @@ import baseUrl from "../../../baseURL";
 
 import { AuthContext } from "../../../context/AuthContext";
 
+import { storage } from "../../../firebase.config";
+import { ref, getDownloadURL } from "firebase/storage";
+
 const Post = ({ post }) => {
+  const [imgPathfromFS, setImgPathfromFS] = useState("");
+
   const { user } = useContext(AuthContext);
 
   const public_folder = process.env.REACT_APP_PUBLIC_FOLDER;
@@ -29,6 +34,20 @@ const Post = ({ post }) => {
     };
     fetchPoster();
   }, [post.userId]);
+
+  useEffect(() => {
+    //BUG FIX
+    const imagePath = post.img?.replace(/"([^"]+(?="))"/g, "$1");
+    //END BUG FIX
+    if (imagePath) {
+      getDownloadURL(ref(storage, imagePath)).then((url) => {
+        setImgPathfromFS(url);
+      });
+      console.log(imgPathfromFS);
+    } else {
+      setImgPathfromFS("");
+    }
+  });
 
   const onLikeClick = () => {
     setLike(isLiked ? like - 1 : like + 1);
@@ -71,7 +90,8 @@ const Post = ({ post }) => {
           </div>
           <div className="postCenter">
             <span className="postText">{post.desc}</span>
-            <img className="postImg" src={public_folder + post.img} alt="" />
+
+            <img className="postImg" src={imgPathfromFS} alt="" />
           </div>
           <div className="postBottom">
             <div className="postBottomLeft">
