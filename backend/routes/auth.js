@@ -52,7 +52,7 @@ router.post("/login", async (req, res) => {
     } else {
       const validPW = await bcrypt.compare(req.body.password, user.password);
       if (!validPW) {
-        res.send(400).json({
+        res.status(400).json({
           message: "Wrong Password",
         });
       } else {
