@@ -19,11 +19,9 @@ const Profile = () => {
   // const username = username;
 
   useEffect(() => {
-    const fetchUser = async () => {
-      const res = await axios.get("/user/?username=" + params.username);
+    axios.get("/user/?username=" + params.username).then((res) => {
       setUser(res.data);
-    };
-    fetchUser();
+    });
   });
 
   return (
@@ -41,7 +39,11 @@ const Profile = () => {
               />
               <img
                 className="profileUserImg"
-                src={public_folder + "person/2.png"}
+                src={
+                  user.profilePicture
+                    ? public_folder + user.profilePicture
+                    : public_folder + "avatar.svg"
+                }
                 alt=""
               />
             </div>
