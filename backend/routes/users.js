@@ -104,7 +104,7 @@ router.put("/:id/unfollow", async (req, res) => {
   }
 });
 
-// Get followings -> get all users that the current user is following
+// Get followings -> users who you (=> params.userId) follow
 router.get("/followings/:userId", async (req, res) => {
   try {
     const user = await User.findById(req.params.userId);
