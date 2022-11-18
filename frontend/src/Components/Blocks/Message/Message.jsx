@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./Message.css";
+import { format } from "timeago.js";
 
 import axios from "axios";
 import baseUrl from "../../../baseURL";
@@ -23,8 +24,6 @@ const Message = ({ message, own }) => {
     getSender();
   }, [message]);
 
-  console.log(sender);
-
   return (
     <>
       <div className={own ? "message own" : "message"}>
@@ -40,7 +39,7 @@ const Message = ({ message, own }) => {
           />
           <p className="messageText">{message.text}</p>
         </div>
-        <div className="messageBottom">1 min ago</div>
+        <div className="messageBottom">{format(message.createdAt)}</div>
       </div>
     </>
   );
