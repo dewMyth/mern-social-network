@@ -8,6 +8,7 @@ import Home from "./Components/Pages/Home/Home";
 import Login from "./Components/Pages/Login/Login";
 import Profile from "./Components/Pages/Profile/Profile";
 import Register from "./Components/Pages/Register/Register";
+import Messenger from "./Components/Pages/Messenger/Messenger";
 
 function App() {
   const { user } = useContext(AuthContext);
@@ -38,6 +39,12 @@ function App() {
               path="/profile/:username"
               element={user == null ? <Navigate to="/login" /> : <Profile />}
             />
+            <Route
+              exact
+              path="/messenger"
+              element={user == null ? <Navigate to="/login" /> : <Messenger />}
+            />
+            <Route path="*" element={<Navigate to="/" />} />
           </Routes>
         </BrowserRouter>
       </AuthContextProvider>
