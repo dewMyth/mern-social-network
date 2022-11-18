@@ -10,7 +10,7 @@ import Profile from "./Components/Pages/Profile/Profile";
 import Register from "./Components/Pages/Register/Register";
 
 function App() {
-  const { user } = useContext(AuthContext) || localStorage.getItem("user");
+  const { user } = useContext(AuthContext);
 
   return (
     <>
@@ -20,20 +20,24 @@ function App() {
             <Route
               exact
               path="/"
-              element={user ? <Home /> : <Navigate to="/login" />}
+              element={user !== null ? <Home /> : <Navigate to="login" />}
             />
 
             <Route
               exact
               path="/login"
-              element={user ? <Navigate to="/" /> : <Login />}
+              element={user !== null ? <Navigate to="/" /> : <Login />}
             />
             <Route
               exact
               path="/register"
-              element={user ? <Navigate to="/" /> : <Register />}
+              element={user !== null ? <Navigate to="/" /> : <Register />}
             />
-            <Route exact path="/profile/:username" element={<Profile />} />
+            <Route
+              exact
+              path="/profile/:username"
+              element={user == null ? <Navigate to="/login" /> : <Profile />}
+            />
           </Routes>
         </BrowserRouter>
       </AuthContextProvider>

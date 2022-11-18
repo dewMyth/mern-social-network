@@ -1,14 +1,43 @@
-import React, { useContext } from "react";
+import React, { useState, useContext } from "react";
 import { Person, Search, Chat, Notifications } from "@material-ui/icons";
 import "./NavBar.css";
 import { AuthContext } from "../../../context/AuthContext";
 
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+
+import Box from "@mui/material/Box";
+
+import IconButton from "@mui/material/IconButton";
+import Typography from "@mui/material/Typography";
+import Menu from "@mui/material/Menu";
+import Avatar from "@mui/material/Avatar";
+import Tooltip from "@mui/material/Tooltip";
+import MenuItem from "@mui/material/MenuItem";
 
 const NavBar = () => {
-  const { user } = useContext(AuthContext);
+  const { user, dispatch } = useContext(AuthContext);
 
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
+
+  const navigate = useNavigate();
+
+  const [anchorElUser, setAnchorElUser] = useState(null);
+  const handleOpenUserMenu = (event) => {
+    setAnchorElUser(event.currentTarget);
+  };
+  const handleCloseUserMenu = () => {
+    setAnchorElUser(null);
+  };
+
+  const handleLogout = () => {
+    // localStorage.removeItem("user");
+    dispatch({ type: "LOGOUT" });
+    window.location.reload();
+  };
+
+  const handleProfileClick = () => {
+    navigate("/profile/" + user.username);
+  };
 
   return (
     <>
@@ -49,17 +78,43 @@ const NavBar = () => {
               <span className="topbarIconBadge">1</span>
             </div>
           </div>
-          <Link to={`/profile/${user.username}`}>
-            <img
-              src={
-                user.profilePicture
-                  ? PF + user.profilePicture
-                  : PF + "avatar.svg"
-              }
-              alt=""
-              className="topbarProfilePicture"
-            />
-          </Link>
+          <Box sx={{ flexGrow: 0 }}>
+            <Tooltip title="Open settings">
+              <IconButton onClick={handleOpenUserMenu} sx={{ p: -1 }}>
+                <Avatar
+                  alt="Remy Sharp"
+                  src={
+                    user?.profilePicture
+                      ? PF + user.profilePicture
+                      : PF + "avatar.svg"
+                  }
+                />
+              </IconButton>
+            </Tooltip>
+            <Menu
+              sx={{ mt: "45px" }}
+              id="menu-appbar"
+              anchorEl={anchorElUser}
+              anchorOrigin={{
+                vertical: "top",
+                horizontal: "right",
+              }}
+              keepMounted
+              transformOrigin={{
+                vertical: "top",
+                horizontal: "right",
+              }}
+              open={Boolean(anchorElUser)}
+              onClose={handleCloseUserMenu}
+            >
+              <MenuItem onClick={handleProfileClick}>
+                <Typography textAlign="center">Profile</Typography>
+              </MenuItem>
+              <MenuItem onClick={handleLogout}>
+                <Typography textAlign="center">Logout</Typography>
+              </MenuItem>
+            </Menu>
+          </Box>
         </div>
       </div>
     </>
