@@ -1,22 +1,44 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import "./Message.css";
 
-const Message = ({ own }) => {
+import axios from "axios";
+import baseUrl from "../../../baseURL";
+
+const Message = ({ message, own }) => {
+  const PF = process.env.REACT_APP_PUBLIC_FOLDER;
+
+  const [sender, setSender] = useState({});
+
+  useEffect(() => {
+    const getSender = async () => {
+      try {
+        const res = await axios.get(
+          baseUrl + "user?userId=" + message.senderId
+        );
+        setSender(res.data);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    getSender();
+  }, [message]);
+
+  console.log(sender);
+
   return (
     <>
       <div className={own ? "message own" : "message"}>
         <div className="messageTop">
           <img
             className="messageImg"
-            src="https://www.pngmart.com/files/10/User-Account-Person-PNG-File.png"
+            src={
+              sender?.profilePicture
+                ? PF + sender.profilePicture
+                : PF + "avatar.svg"
+            }
             alt=""
           />
-          <p className="messageText">
-            Hello! Lorem ipsum dolor sit amet consectetur adipisicing elit.
-            Ipsam architecto nulla obcaecati culpa consequatur natus quos in
-            excepturi. Facilis harum odit enim ullam molestias neque labore
-            cupiditate doloremque dolore quia!
-          </p>
+          <p className="messageText">{message.text}</p>
         </div>
         <div className="messageBottom">1 min ago</div>
       </div>
