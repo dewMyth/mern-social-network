@@ -4,7 +4,6 @@ import "./Share.css";
 import { PermMedia, Label, Room, EmojiEmotions } from "@material-ui/icons";
 import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 
@@ -117,6 +116,7 @@ const Share = () => {
                 className="shareImg"
                 src={URL.createObjectURL(postImg)}
                 style={{ width: "50%", height: "50%" }}
+                alt=""
               />
               <Cancel
                 className="shareCancelImg"

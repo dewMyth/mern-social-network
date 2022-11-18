@@ -38,7 +38,7 @@ const RightBar = ({ user }) => {
     } else {
       setFollowed(false);
     }
-  }, [user]);
+  }, [currentUser.following, user?._id]);
 
   const handleAddOrRemove = async (e) => {
     e.preventDefault();

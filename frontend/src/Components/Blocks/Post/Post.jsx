@@ -46,7 +46,7 @@ const Post = ({ post }) => {
     } else {
       setImgPathfromFS("");
     }
-  });
+  }, [post.img]);
 
   const onLikeClick = () => {
     setLike(isLiked ? like - 1 : like + 1);
