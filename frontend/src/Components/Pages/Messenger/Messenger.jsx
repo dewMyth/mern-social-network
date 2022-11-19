@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState, useContext, useRef } from "react";
 import "./Messenger.css";
 import NavBar from "../../Blocks/NavBar/NavBar";
 import Conversation from "../../Blocks/Conversation/Conversation";
@@ -16,6 +16,8 @@ const Messenger = () => {
   const [messages, setMessages] = useState([]);
   const [currentChat, setCurrentChat] = useState(null);
   const [newMessage, setNewMessage] = useState("");
+
+  const scrollRef = useRef();
 
   useEffect(() => {
     const getConversation = async () => {
@@ -44,6 +46,10 @@ const Messenger = () => {
     };
     getMessages();
   }, [currentChat]);
+
+  useEffect(() => {
+    scrollRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
 
   const handleSubmitMsg = async (e) => {
     e.preventDefault();
@@ -94,7 +100,7 @@ const Messenger = () => {
                 <div className="chatBoxTop">
                   {messages.map((message) => {
                     return (
-                      <div key={message._id}>
+                      <div key={message._id} ref={scrollRef}>
                         <Message
                           message={message}
                           own={message.senderId === user._id ? true : false}
