@@ -29,7 +29,7 @@ const ChatOnline = ({ onlineUsers, currentUserId, setCurrentChat }) => {
     setOnlineFriends(
       friends.filter((friend) => onlineUsers.includes(friend._id))
     );
-  }, [friends]);
+  }, [friends, onlineUsers]);
 
   const handleClickOnlineFriend = async (onlineFriend) => {
     try {
