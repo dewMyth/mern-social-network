@@ -70,7 +70,9 @@ const NavBar = () => {
               <span className="topbarIconBadge">1</span>
             </div>
             <div className="topbarIconItem">
-              <Chat />
+              <Link className="link" to="/messenger">
+                <Chat />
+              </Link>
               <span className="topbarIconBadge">1</span>
             </div>
             <div className="topbarIconItem">
