@@ -7,6 +7,8 @@ import ChatOnline from "../../Blocks/ChatOnline/ChatOnline";
 import { AuthContext } from "../../../context/AuthContext";
 import baseUrl from "../../../baseURL";
 
+import { io } from "socket.io-client";
+
 import axios from "axios";
 
 const Messenger = () => {
@@ -16,8 +18,23 @@ const Messenger = () => {
   const [messages, setMessages] = useState([]);
   const [currentChat, setCurrentChat] = useState(null);
   const [newMessage, setNewMessage] = useState("");
-
+  const [arrivalMessage, setArrivalMessage] = useState(null);
   const scrollRef = useRef();
+  const socket = useRef();
+
+  useEffect(() => {
+    // Run this just once -> empty dependency array []
+    socket.current = io("ws://localhost:5001");
+  }, []);
+
+  useEffect(() => {
+    // Send message to server
+    socket.current.emit("addUser", user._id);
+    // Receive message from server
+    socket.current.on("getUsers", (users) => {
+      console.log(users);
+    });
+  }, [user]);
 
   useEffect(() => {
     const getConversation = async () => {
@@ -54,6 +71,13 @@ const Messenger = () => {
   const handleSubmitMsg = async (e) => {
     e.preventDefault();
 
+    // Send the message to socket server
+    socket.current.emit("sendMessage", {
+      senderId: user._id,
+      receiverId: currentChat?.members.find((member) => member !== user._id), //member is the other user of the conversation
+      text: newMessage,
+    });
+
     const messsage = {
       senderId: user._id,
       conversationId: currentChat._id,
@@ -70,6 +94,23 @@ const Messenger = () => {
       console.log(err);
     }
   };
+
+  // Receive message from socket server
+  useEffect(() => {
+    socket.current.on("getMessage", (message) => {
+      setArrivalMessage({
+        senderId: message.senderId,
+        text: message.text,
+        createdAt: Date.now(),
+      });
+    });
+  }, []);
+
+  useEffect(() => {
+    arrivalMessage &&
+      currentChat?.members.includes(arrivalMessage.senderId) &&
+      setMessages((prev) => [...prev, arrivalMessage]);
+  }, [arrivalMessage, currentChat]);
 
   return (
     <>
