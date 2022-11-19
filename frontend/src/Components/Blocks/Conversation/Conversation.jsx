@@ -30,7 +30,9 @@ const Conversation = ({ conversation, currentUser }) => {
         <img
           className="conversationImg"
           src={
-            friend.profilePicture ? friend.profilePicture : PF + "avatar.svg"
+            friend.profilePicture
+              ? PF + friend.profilePicture
+              : PF + "avatar.svg"
           }
           alt=""
         />
