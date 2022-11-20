@@ -2,10 +2,6 @@ import React, { useContext, useRef, useState } from "react";
 import "./Share.css";
 
 import { PermMedia, Label, Room, EmojiEmotions } from "@material-ui/icons";
-import Alert from "@mui/material/Alert";
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
-import Modal from "@mui/material/Modal";
 
 import { Cancel } from "@material-ui/icons";
 
@@ -15,17 +11,9 @@ import baseUrl from "../../../baseURL";
 
 import axios from "axios";
 
-const style = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: 400,
-  bgcolor: "background.paper",
-  border: "2px solid #000",
-  boxShadow: 24,
-  p: 4,
-};
+import Snackbar from "@mui/material/Snackbar";
+import IconButton from "@mui/material/IconButton";
+import Button from "@mui/material/Button";
 
 const Share = () => {
   const { user } = useContext(AuthContext);
@@ -35,9 +23,19 @@ const Share = () => {
 
   const [postImg, setpostImg] = useState(null);
 
-  const [open, setOpen] = useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const [open, setOpen] = React.useState(false);
+
+  const handleClick = () => {
+    setOpen(true);
+  };
+
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpen(false);
+  };
 
   const handlePostSubmit = async (e) => {
     e.preventDefault();
@@ -60,7 +58,7 @@ const Share = () => {
     try {
       console.log(newPost);
       await axios.post(baseUrl + "post/create", newPost);
-      handleOpen();
+      handleClick();
       setTimeout(() => {
         window.location.reload();
       }, 1000);
@@ -69,26 +67,32 @@ const Share = () => {
     }
   };
 
+  const action = (
+    <React.Fragment>
+      <Button color="secondary" size="small" onClick={handleClose}>
+        UNDO
+      </Button>
+      <IconButton
+        size="small"
+        aria-label="close"
+        color="inherit"
+        onClick={handleClose}
+      >
+        {/* <CloseIcon fontSize="small" /> */}
+      </IconButton>
+    </React.Fragment>
+  );
+
   return (
     <>
       {open ? (
-        <Modal
+        <Snackbar
           open={open}
+          autoHideDuration={6000}
           onClose={handleClose}
-          aria-labelledby="modal-modal-title"
-          aria-describedby="modal-modal-description"
-        >
-          <Box sx={style}>
-            <Typography id="modal-modal-title" variant="h6" component="h2">
-              Success
-            </Typography>
-            <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-              <Alert severity="success">
-                Post Created Successfully! Refresh the page to see the post.
-              </Alert>
-            </Typography>
-          </Box>
-        </Modal>
+          message="Post Created Successfully"
+          action={action}
+        />
       ) : null}
       <div className="share">
         <div className="shareWrapper">
