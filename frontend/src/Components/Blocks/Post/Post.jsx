@@ -20,6 +20,11 @@ import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
 import ListItemAvatar from "@mui/material/ListItemAvatar";
 
+import Button from "@mui/material/Button";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import EditPost from "./EditPost";
+
 const Post = ({ post }) => {
   const [imgPathfromFS, setImgPathfromFS] = useState("");
 
@@ -30,6 +35,17 @@ const Post = ({ post }) => {
   const [like, setLike] = useState(post.likes.length);
   const [poster, setPoster] = useState({});
   const [isLiked, setIsLiked] = useState(false);
+
+  const [openEditModal, setOpenEditModal] = useState(false);
+
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const openMorevert = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
   useEffect(() => {
     const fetchPoster = async () => {
@@ -66,27 +82,24 @@ const Post = ({ post }) => {
     }
   };
 
+  const ownPost = user._id === post.userId;
+
   return (
     <>
+      {openEditModal ? (
+        <EditPost
+          openEditModal
+          setOpenEditModal={setOpenEditModal}
+          setPostImg={setImgPathfromFS}
+          post={post}
+          user={user}
+          postImg={imgPathfromFS}
+        />
+      ) : null}
       <div className="post">
         <div className="postWrapper">
           <div className="postTop">
             <div className="postTopLeft">
-              {/* <Link to={`/profile/${poster.username}`}>
-                <img
-                  className="postProfileImg"
-                  src={
-                    user.profilePicture
-                      ? public_folder + user.profilePicture
-                      : public_folder + "avatar.svg"
-                  }
-                  width="100px"
-                  alt=""
-                />
-              </Link>
-              <span className="postUsername">
-                {poster.firstName + " " + poster.lastName}
-              </span> */}
               <ListItem>
                 <ListItemAvatar>
                   <img
@@ -108,7 +121,36 @@ const Post = ({ post }) => {
               </ListItem>
             </div>
             <div className="postTopRight">
-              <MoreVert />
+              {ownPost && (
+                <MoreVert
+                  id="basic-button"
+                  aria-controls={openMorevert ? "basic-menu" : undefined}
+                  aria-haspopup="true"
+                  aria-expanded={openMorevert ? "true" : undefined}
+                  onClick={handleClick}
+                />
+              )}
+
+              {
+                <Menu
+                  id="basic-menu"
+                  anchorEl={anchorEl}
+                  open={openMorevert}
+                  onClose={handleClose}
+                  MenuListProps={{
+                    "aria-labelledby": "basic-button",
+                  }}
+                >
+                  <MenuItem
+                    onClick={() => {
+                      setOpenEditModal(true);
+                    }}
+                  >
+                    Edit Post
+                  </MenuItem>
+                  <MenuItem onClick={handleClose}>Delete Post</MenuItem>
+                </Menu>
+              }
             </div>
           </div>
           <div className="postCenter">
