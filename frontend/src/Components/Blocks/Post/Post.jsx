@@ -16,6 +16,10 @@ import { AuthContext } from "../../../context/AuthContext";
 import { storage } from "../../../firebase.config";
 import { ref, getDownloadURL } from "firebase/storage";
 
+import ListItem from "@mui/material/ListItem";
+import ListItemText from "@mui/material/ListItemText";
+import ListItemAvatar from "@mui/material/ListItemAvatar";
+
 const Post = ({ post }) => {
   const [imgPathfromFS, setImgPathfromFS] = useState("");
 
@@ -68,7 +72,7 @@ const Post = ({ post }) => {
         <div className="postWrapper">
           <div className="postTop">
             <div className="postTopLeft">
-              <Link to={`/profile/${poster.username}`}>
+              {/* <Link to={`/profile/${poster.username}`}>
                 <img
                   className="postProfileImg"
                   src={
@@ -80,8 +84,28 @@ const Post = ({ post }) => {
                   alt=""
                 />
               </Link>
-              <span className="postUsername">{poster.username}</span>
-              <span className="postDate">{format(post.createdAt)}</span>
+              <span className="postUsername">
+                {poster.firstName + " " + poster.lastName}
+              </span> */}
+              <ListItem>
+                <ListItemAvatar>
+                  <img
+                    className="postProfileImg"
+                    src={
+                      user.profilePicture
+                        ? public_folder + user.profilePicture
+                        : public_folder + "avatar.svg"
+                    }
+                    width="100px"
+                    alt=""
+                  />
+                </ListItemAvatar>
+                <ListItemText
+                  primary={poster.firstName + " " + poster.lastName}
+                  secondary={`@${poster.username}`}
+                />
+                <span className="postDate">{format(post.createdAt)}</span>
+              </ListItem>
             </div>
             <div className="postTopRight">
               <MoreVert />

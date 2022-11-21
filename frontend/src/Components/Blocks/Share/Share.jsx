@@ -108,7 +108,13 @@ const Share = () => {
             />
             <input
               className="shareInput"
-              placeholder={"What is in your mind,  " + user.username + "?"}
+              placeholder={
+                "What is in your mind,  " +
+                user.firstName +
+                " (@" +
+                user.username +
+                ") ?"
+              }
               type="text"
               ref={descRef}
             />
