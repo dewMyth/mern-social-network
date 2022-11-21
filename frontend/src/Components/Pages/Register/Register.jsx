@@ -6,8 +6,11 @@ import baseUrl from "../../../baseURL";
 import "./Register.css";
 
 import Alert from "@mui/material/Alert";
+import TextField from "@mui/material/TextField";
 
 const Register = () => {
+  const firstNameRef = useRef();
+  const lastNameRef = useRef();
   const usernameRef = useRef();
   const emailRef = useRef();
   const passwordRef = useRef();
@@ -26,6 +29,8 @@ const Register = () => {
     } else {
       console.log("Passwords match!");
       const registerCredentials = {
+        firstName: firstNameRef.current.value,
+        lastName: lastNameRef.current.value,
         username: usernameRef.current.value,
         email: emailRef.current.value,
         password: passwordRef.current.value,
@@ -58,7 +63,41 @@ const Register = () => {
           </div>
           <div className="registerRight">
             <form className="registerBox" onSubmit={handleRegister}>
-              <input
+              <TextField
+                label="First Name"
+                variant="outlined"
+                inputRef={firstNameRef}
+              />
+              <TextField
+                label="Last Name"
+                variant="outlined"
+                inputRef={lastNameRef}
+              />
+              <TextField
+                label="Username"
+                variant="outlined"
+                inputRef={usernameRef}
+              />
+              <TextField
+                type="email"
+                label="Email"
+                variant="outlined"
+                inputRef={emailRef}
+              />
+              <TextField
+                type="password"
+                label="Password"
+                variant="outlined"
+                inputRef={passwordRef}
+              />
+              <TextField
+                type="password"
+                label="Confirm Password"
+                variant="outlined"
+                inputRef={confirmPasswordRef}
+              />
+
+              {/* <input
                 placeholder="Email"
                 type="email"
                 className="registerInput"
@@ -85,7 +124,7 @@ const Register = () => {
                 className="registerInput"
                 ref={confirmPasswordRef}
                 required
-              />
+              /> */}
               {
                 // If the user is successfully registered, display a success message
                 success ? (
