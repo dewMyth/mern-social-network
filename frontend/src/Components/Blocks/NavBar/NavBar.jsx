@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext, useEffect, useRef } from "react";
 import { Person, Search, Chat, Notifications } from "@material-ui/icons";
 import "./NavBar.css";
 import { AuthContext } from "../../../context/AuthContext";
@@ -19,6 +19,8 @@ import Notification from "../Notifications/Notification";
 
 import axios from "axios";
 import baseUrl from "../../../baseURL";
+
+import { io } from "socket.io-client";
 
 const NavBar = () => {
   const { user, dispatch } = useContext(AuthContext);
@@ -44,6 +46,39 @@ const NavBar = () => {
   const handleProfileClick = () => {
     navigate("/profile/" + user.username);
   };
+
+  // Socket Configuration
+  const socket = useRef();
+
+  const [arrivalNotification, setArrivalNotification] = useState(null);
+
+  useEffect(() => {
+    // Run this just once -> empty dependency array []
+    socket.current = io("ws://localhost:5002");
+  }, []);
+
+  useEffect(() => {
+    // Emit socket id and user id to notification socket server
+    socket.current.emit("addUser", user._id);
+  }, []);
+
+  // Receive notification from socket server
+  useEffect(() => {
+    socket.current.on("getNotification", (notification) => {
+      setArrivalNotification({
+        senderId: notification.senderId,
+        typeOfNotification: notification.typeOfNotification,
+        post: notification.post,
+        createdAt: Date.now(),
+      });
+    });
+  }, []);
+
+  // Push the arrival notification to the user's notification array
+  useEffect(() => {
+    arrivalNotification &&
+      setNotifications((prev) => [...prev, arrivalNotification]);
+  }, [arrivalNotification]);
 
   const [notifications, setNotifications] = useState([]);
 
@@ -118,7 +153,10 @@ const NavBar = () => {
                     <Menu {...bindMenu(popupState)}>
                       {notifications?.length !== 0
                         ? notifications.map((notification) => (
-                            <MenuItem onClick={popupState.close}>
+                            <MenuItem
+                              onClick={popupState.close}
+                              key={notification._id}
+                            >
                               <Notification
                                 notification={notification}
                                 user={user}

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useRef } from "react";
 import "./Post.css";
 
 import { Link } from "react-router-dom";
@@ -24,6 +24,8 @@ import Button from "@mui/material/Button";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import EditPost from "./EditPost";
+
+import { io } from "socket.io-client";
 
 const Post = ({ post }) => {
   const [imgPathfromFS, setImgPathfromFS] = useState("");
@@ -68,6 +70,13 @@ const Post = ({ post }) => {
     }
   }, [post.img]);
 
+  const socket = useRef();
+
+  useEffect(() => {
+    // Run this just once -> empty dependency array []
+    socket.current = io("ws://localhost:5002");
+  }, []);
+
   const onLikeClick = () => {
     setLike(isLiked ? like - 1 : like + 1);
     setIsLiked(!isLiked);
@@ -82,7 +91,20 @@ const Post = ({ post }) => {
     }
   };
 
+  useEffect(() => {
+    // Emit socket id and user id to notification socket server
+    socket.current.emit("addUser", user._id);
+  }, []);
+
   const sendNotificationToPoster = async () => {
+    // Send the message to socket server
+    socket.current.emit("sendNotification", {
+      senderId: user._id,
+      receiverId: post.userId,
+      typeOfNotification: "like",
+      post: post._id,
+    });
+
     try {
       await axios.post(baseUrl + "notification/create", {
         senderId: user._id,
