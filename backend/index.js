@@ -92,8 +92,8 @@ app.get("/", (req, res) => {
   res.send("WHERE ARE YOU GOING !!! THIS IS BACKEND, YOU SHALL NOT PASS");
 });
 
-app.listen(process.env.SERVER_PORT, () => {
+app.listen(process.env.PORT, () => {
   console.log(
-    "Backend Server Started on PORT : " + process.env.SERVER_PORT + "!"
+    "Backend Server Started on PORT : " + process.env.PORT + "!"
   );
 });
