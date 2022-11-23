@@ -53,7 +53,14 @@ const NavBar = () => {
         const res = await axios.get(
           baseUrl + "notification/get-notifications/" + user._id
         );
-        setNotifications(res.data);
+        setNotifications(
+          res.data.sort((notification1, notification2) => {
+            return (
+              new Date(notification2.createdAt) -
+              new Date(notification1.createdAt)
+            );
+          })
+        );
       } catch (err) {
         console.log(err);
       }

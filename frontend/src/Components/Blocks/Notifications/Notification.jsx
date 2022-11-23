@@ -55,7 +55,7 @@ const Notification = ({ notification }) => {
       //     </IconButton>
       //   }
       title={`You have a new ${notification.typeOfNotification} from ${sender?.firstName} ${sender?.lastName}`}
-      subheader={`For the post ${post?.desc}`}
+      subheader={post ? `For the post ${post?.desc}` : ""}
     />
   );
 };

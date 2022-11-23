@@ -69,9 +69,22 @@ const RightBar = ({ user }) => {
               type: "FOLLOW",
               payload: user._id,
             });
+            sendFollowNotificationToUser();
           });
         setFollowed(true);
       }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const sendFollowNotificationToUser = async () => {
+    try {
+      await axios.post(baseUrl + "notification/create", {
+        senderId: currentUser._id,
+        receiverId: user._id,
+        typeOfNotification: "following",
+      });
     } catch (err) {
       console.log(err);
     }
