@@ -3,8 +3,7 @@
 ##### General
 
 1. Firebase bucket integration for all assets (currently -> posts only)
-2. Profile Edit functionality
-3. Post edit/delete functionality
+2. Post delete functionality
 
 ##### Backend
 
