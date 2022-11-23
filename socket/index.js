@@ -21,7 +21,7 @@ const getUser = (userId) => {
 };
 
 io.on("connection", (socket) => {
-  console.log("A new user connected");
+  console.log("A new user connected with id : " + socket.id);
   // To Send a Event to All Clients -> io.emit()
   //   io.emit("message", "Hello from server");
 

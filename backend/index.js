@@ -20,6 +20,7 @@ const authRoute = require("./routes/auth");
 const postRoute = require("./routes/posts");
 const conversationRoute = require("./routes/conversations");
 const messageRoute = require("./routes/messages");
+const notificationRoute = require("./routes/notifications");
 
 dotenv.config();
 
@@ -85,6 +86,7 @@ app.use("/api/auth", authRoute);
 app.use("/api/post", postRoute);
 app.use("/api/conversation", conversationRoute);
 app.use("/api/message", messageRoute);
+app.use("/api/notification", notificationRoute);
 
 app.get("/", (req, res) => {
   res.send("WHERE ARE YOU GOING !!! THIS IS BACKEND, YOU SHALL NOT PASS");
