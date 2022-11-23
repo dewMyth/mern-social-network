@@ -75,8 +75,21 @@ const Post = ({ post }) => {
       axios
         .put(baseUrl + "post/" + post._id + "/like", { userId: user._id })
         .then((res) => {
-          console.log(res.data);
+          sendNotificationToPoster();
         });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const sendNotificationToPoster = async () => {
+    try {
+      await axios.post(baseUrl + "notification/create", {
+        senderId: user._id,
+        receiverId: post.userId,
+        typeOfNotification: "like",
+        post: post._id,
+      });
     } catch (err) {
       console.log(err);
     }

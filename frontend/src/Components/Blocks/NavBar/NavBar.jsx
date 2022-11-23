@@ -123,7 +123,7 @@ const NavBar = () => {
                   </React.Fragment>
                 )}
               </PopupState>
-              <span className="topbarIconBadge">1</span>
+              <span className="topbarIconBadge">{notifications.length}</span>
             </div>
           </div>
           <Box sx={{ flexGrow: 0 }}>
