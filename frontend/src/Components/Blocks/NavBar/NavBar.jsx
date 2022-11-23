@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { Person, Search, Chat, Notifications } from "@material-ui/icons";
 import "./NavBar.css";
 import { AuthContext } from "../../../context/AuthContext";
@@ -13,6 +13,12 @@ import Menu from "@mui/material/Menu";
 import Avatar from "@mui/material/Avatar";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
+
+import PopupState, { bindTrigger, bindMenu } from "material-ui-popup-state";
+import Notification from "../Notifications/Notification";
+
+import axios from "axios";
+import baseUrl from "../../../baseURL";
 
 const NavBar = () => {
   const { user, dispatch } = useContext(AuthContext);
@@ -38,6 +44,23 @@ const NavBar = () => {
   const handleProfileClick = () => {
     navigate("/profile/" + user.username);
   };
+
+  const [notifications, setNotifications] = useState([]);
+
+  useEffect(() => {
+    const getNotifications = async () => {
+      try {
+        const res = await axios.get(
+          baseUrl + "notification/get-notifications/" + user._id
+        );
+        setNotifications(res.data);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    getNotifications();
+    console.log(notifications);
+  }, []);
 
   return (
     <>
@@ -76,7 +99,30 @@ const NavBar = () => {
               <span className="topbarIconBadge">1</span>
             </div>
             <div className="topbarIconItem">
-              <Notifications />
+              <PopupState variant="popover" popupId="demo-popup-menu">
+                {(popupState) => (
+                  <React.Fragment>
+                    <Notifications
+                      variant="contained"
+                      {...bindTrigger(popupState)}
+                    >
+                      Dashboard
+                    </Notifications>
+                    <Menu {...bindMenu(popupState)}>
+                      {notifications?.length !== 0
+                        ? notifications.map((notification) => (
+                            <MenuItem onClick={popupState.close}>
+                              <Notification
+                                notification={notification}
+                                user={user}
+                              />
+                            </MenuItem>
+                          ))
+                        : "No notifications"}
+                    </Menu>
+                  </React.Fragment>
+                )}
+              </PopupState>
               <span className="topbarIconBadge">1</span>
             </div>
           </div>
