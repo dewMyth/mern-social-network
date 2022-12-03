@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
@@ -10,8 +10,20 @@ import Profile from "./Components/Pages/Profile/Profile";
 import Register from "./Components/Pages/Register/Register";
 import Messenger from "./Components/Pages/Messenger/Messenger";
 
+import GlobalState, { socket } from "./GlobalState";
+
+import io from "socket.io-client";
+
 function App() {
   const { user } = useContext(AuthContext);
+
+  useEffect(() => {
+    const socket = io("ws://localhost:5000");
+    GlobalState.socket = socket;
+    if (user) {
+      socket.emit("addUser", user._id);
+    }
+  }, [user, socket]);
 
   return (
     <>

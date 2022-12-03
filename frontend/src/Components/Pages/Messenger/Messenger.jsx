@@ -7,12 +7,14 @@ import ChatOnline from "../../Blocks/ChatOnline/ChatOnline";
 import { AuthContext } from "../../../context/AuthContext";
 import baseUrl from "../../../baseURL";
 
-import { io } from "socket.io-client";
-
 import axios from "axios";
+
+import GlobalState from "../../../GlobalState";
 
 const Messenger = () => {
   const { user } = useContext(AuthContext);
+
+  const socket = GlobalState.socket;
 
   const [conversations, setConversations] = useState(null);
   const [messages, setMessages] = useState([]);
@@ -22,21 +24,14 @@ const Messenger = () => {
   const [onlineUsers, setOnlineUsers] = useState([]);
 
   const scrollRef = useRef();
-  const socket = useRef();
 
   useEffect(() => {
-    // Run this just once -> empty dependency array []
-    socket.current = io("ws://localhost:5001");
-  }, []);
-
-  useEffect(() => {
-    socket.current.emit("addUser", user._id);
-    socket.current.on("getUsers", (users) => {
+    socket.on("getUsers", (users) => {
       setOnlineUsers(
         user.following?.filter((f) => users.some((u) => u.userId === f))
       );
     });
-  }, [user]);
+  }, [user, socket]);
 
   useEffect(() => {
     const getConversation = async () => {
@@ -74,7 +69,7 @@ const Messenger = () => {
     e.preventDefault();
 
     // Send the message to socket server
-    socket.current.emit("sendMessage", {
+    socket.emit("sendMessage", {
       senderId: user._id,
       receiverId: currentChat?.members.find((member) => member !== user._id), //member is the other user of the conversation
       text: newMessage,
@@ -97,7 +92,8 @@ const Messenger = () => {
 
   // Receive message from socket server
   useEffect(() => {
-    socket.current.on("getMessage", (message) => {
+    socket.on("getMessage", (message) => {
+      console.log(message);
       setArrivalMessage({
         senderId: message.senderId,
         text: message.text,
