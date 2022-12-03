@@ -25,10 +25,13 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import EditPost from "./EditPost";
 
+import GlobalState from "../../../GlobalState";
+
 const Post = ({ post }) => {
   const [imgPathfromFS, setImgPathfromFS] = useState("");
 
   const { user } = useContext(AuthContext);
+  const socket = GlobalState.socket;
 
   const public_folder = process.env.REACT_APP_PUBLIC_FOLDER;
 
@@ -83,6 +86,13 @@ const Post = ({ post }) => {
   };
 
   const sendNotificationToPoster = async () => {
+    socket.emit("sendNotification", {
+      senderId: user._id,
+      receiverId: post.userId,
+      typeOfNotification: "like",
+      post: post._id,
+    });
+
     try {
       await axios.post(baseUrl + "notification/create", {
         senderId: user._id,

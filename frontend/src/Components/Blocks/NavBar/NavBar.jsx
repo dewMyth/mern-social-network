@@ -19,9 +19,11 @@ import Notification from "../Notifications/Notification";
 
 import axios from "axios";
 import baseUrl from "../../../baseURL";
+import GlobalState from "../../../GlobalState";
 
 const NavBar = () => {
   const { user, dispatch } = useContext(AuthContext);
+  const socket = GlobalState.socket;
 
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
 
@@ -46,6 +48,7 @@ const NavBar = () => {
   };
 
   const [notifications, setNotifications] = useState([]);
+  const [arrivalNotification, setArrivalNotification] = useState(null);
 
   useEffect(() => {
     const getNotifications = async () => {
@@ -53,8 +56,9 @@ const NavBar = () => {
         const res = await axios.get(
           baseUrl + "notification/get-notifications/" + user._id
         );
+
         setNotifications(
-          res.data.sort((notification1, notification2) => {
+          res.data.slice(-10).sort((notification1, notification2) => {
             return (
               new Date(notification2.createdAt) -
               new Date(notification1.createdAt)
@@ -68,6 +72,24 @@ const NavBar = () => {
     getNotifications();
     console.log(notifications);
   }, []);
+
+  // Receive notification from socket server
+  useEffect(() => {
+    socket.on("getNotification", (notification) => {
+      setArrivalNotification({
+        senderId: notification.senderId,
+        typeOfNotification: notification.typeOfNotification,
+        post: notification.post,
+        createdAt: Date.now(),
+      });
+    });
+  }, []);
+
+  // Push the arrival notification to the user's notification array
+  useEffect(() => {
+    arrivalNotification &&
+      setNotifications((prev) => [...prev, arrivalNotification]);
+  }, [arrivalNotification]);
 
   return (
     <>
@@ -133,7 +155,9 @@ const NavBar = () => {
                   </React.Fragment>
                 )}
               </PopupState>
-              <span className="topbarIconBadge">{notifications.length}</span>
+              <span className="topbarIconBadge">
+                {notifications.length > 9 ? "9+" : notifications.length}
+              </span>
             </div>
           </div>
           <Box sx={{ flexGrow: 0 }}>

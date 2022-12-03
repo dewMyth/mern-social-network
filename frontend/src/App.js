@@ -20,6 +20,7 @@ function App() {
   useEffect(() => {
     const socket = io("ws://localhost:5000");
     GlobalState.socket = socket;
+    console.log("socket", socket);
     if (user) {
       socket.emit("addUser", user._id);
     }

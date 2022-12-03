@@ -153,6 +153,23 @@ io.on("connection", (socket) => {
     }
   });
 
+  // Notification Socket Handling
+  socket.on(
+    "sendNotification",
+    ({ senderId, receiverId, typeOfNotification, post }) => {
+      const user = getUser(receiverId); // Get the receiver
+      if (user) {
+        io.to(user.socketId).emit("getNotification", {
+          senderId,
+          typeOfNotification,
+          post,
+        });
+      } else {
+        console.log("User not online!");
+      }
+    }
+  );
+
   // Disconnect socket server after user disconnects (moved away from conversation)
   socket.on("disconnect", () => {
     console.log("A user disconnected");
@@ -162,10 +179,6 @@ io.on("connection", (socket) => {
 });
 
 // End Messaging Socket Server
-
-// Notification Socket Server
-
-// End Notification Socket Server
 
 server.listen(process.env.PORT, () => {
   console.log("Backend Server Started on PORT : " + process.env.PORT + "!");
