@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect, useRef } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { Person, Search, Chat, Notifications } from "@material-ui/icons";
 import "./NavBar.css";
 import { AuthContext } from "../../../context/AuthContext";
@@ -71,7 +71,7 @@ const NavBar = () => {
     };
     getNotifications();
     console.log(notifications);
-  }, []);
+  }, [notifications, user._id]);
 
   // Receive notification from socket server
   useEffect(() => {
@@ -83,7 +83,7 @@ const NavBar = () => {
         createdAt: Date.now(),
       });
     });
-  }, []);
+  }, [socket]);
 
   // Push the arrival notification to the user's notification array
   useEffect(() => {

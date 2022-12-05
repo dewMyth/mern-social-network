@@ -10,7 +10,7 @@ import Profile from "./Components/Pages/Profile/Profile";
 import Register from "./Components/Pages/Register/Register";
 import Messenger from "./Components/Pages/Messenger/Messenger";
 
-import GlobalState, { socket } from "./GlobalState";
+import GlobalState from "./GlobalState";
 
 import io from "socket.io-client";
 
@@ -24,7 +24,7 @@ function App() {
     if (user) {
       socket.emit("addUser", user._id);
     }
-  }, [user, socket]);
+  }, [user]);
 
   return (
     <>

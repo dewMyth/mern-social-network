@@ -1,10 +1,7 @@
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 
-import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 import Paper from "@mui/material/Paper";
-
-import Share from "../Share/Share";
 
 import baseUrl from "../../../baseURL";
 

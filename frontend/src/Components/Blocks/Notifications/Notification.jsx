@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 
 import CardHeader from "@mui/material/CardHeader";
 import Avatar from "@mui/material/Avatar";
-import { red } from "@mui/material/colors";
 
 import axios from "axios";
 import baseUrl from "../../../baseURL";
@@ -35,7 +34,7 @@ const Notification = ({ notification }) => {
 
     getSenderDetails();
     getPostDetails();
-  }, []);
+  }, [notification]);
 
   return (
     <CardHeader
