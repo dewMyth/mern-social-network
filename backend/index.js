@@ -45,6 +45,7 @@ mongoose.connect(
 );
 
 // Public Folder Acces
+app.use(express.static(path.join(__dirname, "client")));
 app.use("/images", express.static(path.join(__dirname, "public/images")));
 
 //Middleware
